@@ -1,6 +1,5 @@
 FROM adnrv/texlive:full
 
-
 RUN apt-get update -qq &&\
      apt-get install -y \
             python3 \
@@ -14,7 +13,14 @@ RUN apt-get update -qq &&\
      	/tmp/* \
           /var/tmp/* 
 
-WORKDIR /data
+WORKDIR /arxiv-collector
 
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir arxiv-collector
+
+RUN arxiv-collector --get-latexmk ./latexmk && ln -sf /arxiv-collector/latexmk /usr/local/texlive/bin/x86_64-linux/latexmk
+
+WORKDIR /data
+
+ENTRYPOINT ["arxiv-collector"]
+CMD ["--help"]
